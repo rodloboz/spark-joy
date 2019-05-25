@@ -26,3 +26,9 @@ export const Heading = styled.h1`
   line-height: ${props => palette("headings", headingSize(props))};
   margin-bottom: 0;
 `
+
+export const Flex = styled.div`
+  display: flex;
+  flex-direction: ${props =>  (props.column ? "column" : "row")};
+  justify-content: center;
+`
