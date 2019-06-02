@@ -22,6 +22,21 @@ functions:
     handler: dist/graphql.handler
     events:
       - http:
-          path: hello
+          path: graphql
           method: GET
           cors: true
+resources:
+    Resources:
+        JoyWidgetsTable:
+            Type: "AWS::DynamoDB::Table"
+            Properties:
+                AttributeDefinitions:
+                    - AttributeName: widgetId
+                      AttributeType: S
+                KeySchema:
+                    - AttributeName: widgetId
+                      KeyType: HASH
+                ProvisionedThroughput:
+                    ReadCapacityUnits: 1
+                    WriteCapacityUnits: 1
+                TableName: ${self:provider.environment.DYNAMODB_TABLE}
