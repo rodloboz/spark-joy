@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom'
 import styled from 'styled-components'
 import { Button } from 'rebass'
 import { palette } from 'styled-tools'
+import ButterToast, { Cinnamon } from "butter-toast"
 
 import { Heading, Flex } from './styles'
 
@@ -85,7 +86,18 @@ const WidgetBuilder = () => {
   function exportWidget () {
     const el = document.createElement("div")
     ReactDOM.render(<Widget value={typeOfJoy} />, el)
+
     copyToClipboard(el.innerHTML)
+
+    ButterToast.raise({
+      content: (
+        <Cinnamon.Crisp
+          scheme={Cinnamon.Crisp.SCHEME_BLUE}
+          title="Copied to clipboard!"
+          content={() => <div>👍 Paste HTML into your favorite editor</div>}
+        />
+      ),
+    })
   }
 
   return (
