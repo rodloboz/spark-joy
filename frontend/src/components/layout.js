@@ -51,6 +51,7 @@ const Layout = ({ children }) => (
             © {new Date().getFullYear()}, Built with ❤️ on the internet
             </CentralColumn>
           </Footer>
+          
           <ButterToast
             position={{ vertical: POS_TOP, horizontal: POS_RIGHT }}
           />
