@@ -36,8 +36,12 @@ resources:
             Properties:
                 AttributeDefinitions:
                     -
-                      AttributeName: widgetId
-                      AttributeType: S
+                      - AttributeName: widgetId
+                        AttributeType: S
+                      - AttributeName: thumbsUp
+                        AttributeType: N
+                      - AttributeName: thumbsdown
+                        AttributeType: N
                 KeySchema:
                     -
                       AttributeName: widgetId
