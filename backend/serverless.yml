@@ -35,13 +35,12 @@ resources:
             Type: "AWS::DynamoDB::Table"
             Properties:
                 AttributeDefinitions:
-                    -
-                      - AttributeName: widgetId
-                        AttributeType: S
-                      - AttributeName: thumbsUp
-                        AttributeType: N
-                      - AttributeName: thumbsdown
-                        AttributeType: N
+                  - AttributeName: widgetId
+                    AttributeType: S
+                  - AttributeName: thumbsUp
+                    AttributeType: N
+                  - AttributeName: thumbsdown
+                    AttributeType: N
                 KeySchema:
                     -
                       AttributeName: widgetId
