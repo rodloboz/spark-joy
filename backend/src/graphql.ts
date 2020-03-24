@@ -22,7 +22,20 @@ const typeDefs = gql`
 const resolvers = {
   Query: {
     widget: async  (_: any, { widgetId }: { widgetId: string }) => {
-      await getItem({ Key: { widgetId } });
+      const result= await getItem(
+        { Key: { widgetId } })
+      ;
+
+      if (!result.Item) {
+        return {}
+      }
+
+      return(
+        {
+          ...result.Item,
+          name: result.Item.widgetName
+        }
+      )
     }
   },
 

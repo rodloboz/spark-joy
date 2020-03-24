@@ -38,7 +38,7 @@ export const updateItem = async (params: UpdateItemParams) => {
   });
 };
 
-export const getItem = async(params: GetItemPArams) => {
+export const getItem = async(params: GetItemPArams): Promise<AWS.DynamoDB.DocumentClient.GetItemOutput> => {
   const query = {
     TableName: process.env.DYNAMODB_TABLE!,
     ...params
