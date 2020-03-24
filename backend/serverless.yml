@@ -2,7 +2,7 @@ service: spark-joy
 
 provider:
   name: aws
-  runtime: nodejs8.10
+  runtime: nodejs12.x
   stage: dev
   environment:
     DYNAMODB_TABLE: ${self:service}-db-${self:provider.stage}
@@ -24,6 +24,10 @@ functions:
       - http:
           path: graphql
           method: GET
+          cors: true
+      - http:
+          path: graphql
+          method: POST
           cors: true
 resources:
     Resources:
