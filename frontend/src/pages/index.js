@@ -5,6 +5,7 @@ import Layout from '../components/layout'
 import SEO from '../components/seo'
 
 import WidgetBuilder from '../components/WidgetBuilder'
+import WidgetList from '../components/WidgetList'
 
 const IndexPage = () => (
   <Layout>
@@ -15,6 +16,7 @@ const IndexPage = () => (
         <span role="img" aria-label="point down">👇</span>
       </p>
       <WidgetBuilder />
+      <WidgetList />
     </CentralColumn>
   </Layout>
 )

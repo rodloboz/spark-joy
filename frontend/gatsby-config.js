@@ -19,7 +19,7 @@ module.exports = {
       resolve: 'gatsby-source-graphql',
       options: {
         typeName: 'WIDGET',
-        fieldName: 'widgetsapi',
+        fieldName: 'widgetsApi',
         url: SERVER_URI,
         refreshInterval: 60,
       }
