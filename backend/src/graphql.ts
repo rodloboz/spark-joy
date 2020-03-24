@@ -1,13 +1,10 @@
-// import { ApolloServer, gql } from 'apollo-server-lambda';
-import { ApolloServer, gql } from 'apollo-server';
-import AWS from 'aws-sdk';
+import { ApolloServer, gql } from 'apollo-server-lambda';
 import uuidv4  from 'uuid/v4';
-
-const dynamoDB = new AWS.DynamoDB.DocumentClient();
+import { updateItem, getItem } from './dynamoDb';
 
 const typeDefs = gql`
   type Query {
-    hello: String
+    widget(widgetId: String!): Widget
   }
 
   type Widget {
@@ -18,46 +15,50 @@ const typeDefs = gql`
   }
 
   type Mutation {
-    saveWidget(name: String!): Widget
+    saveWidget(name: String!, widgetId: String): Widget
   }
 `;
 
 const resolvers = {
   Query: {
-    hello: () => "Hello world!"
+    widget: async  (_: any, { widgetId }: { widgetId: string }) => {
+      await getItem({ Key: { widgetId } });
+    }
   },
 
   Mutation: {
-    saveWidget: async (_: any, { name }: { name: string}) => {
-      const widgetId = uuidv4();
+    saveWidget: async (
+      _: any,
+      { name, widgetId  }: { name: string, widgetId?: string}
+    ) => {
+      if (!widgetId) {
+        widgetId = uuidv4();
+      }
 
-      const result = await new Promise((resolve, reject) => {
-        dynamoDB.update({
-          TableName: process.env.DYNAMODB_TABLE!,
+      await updateItem({
           Key: { widgetId },
-          UpdateExpression: "SET widgetId = :widgetId, name = :name",
+          UpdateExpression:
+            "SET widgetName = :name, thumbsUp = :thumbsUp, thumbsDown = :thumbsDown",
           ExpressionAttributeValues: {
-            ":widgetId": widgetId,
-            ":name": name
+            ":name": name,
+            ":thumbsUp": 0,
+            ":thumbsDown": 0,
           }
-        });
       });
 
-      console.log(result);
-
       return {
+        widgetId,
         name,
-        WidgetId: 'querty',
         thumbsUp: 0,
         thumbsDown: 0
       };
     }
   }
 };
- 
+
 export const server = new ApolloServer({
   typeDefs,
   resolvers
 });
 
-// export const handler = server.createHandler();
+export const handler = server.createHandler();
