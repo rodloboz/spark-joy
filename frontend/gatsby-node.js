@@ -24,15 +24,19 @@ exports.createPages = ({ graphql, actions }) => {
         widgetsApi {
           allWidgets {
             widgetId
+            name
           }
         }
       }
     `)
 
-    result.data.widgetsApi.allWidgets.forEach(({ widgetId }) => {
+    result.data.widgetsApi.allWidgets.forEach(({ widgetId, name }) => {
+      const votePath = path.resolve('src/pages/vote.js')
+      const widgetPath = path.resolve('src/pages/widget.js')
+
       createPage({
         path: `/${widgetId}/thumbsUp`,
-        component: path.resolve('src/pages/vote.js'),
+        component: votePath,
         context: {
           widgetId,
           voteType: 'thumbsUp'
@@ -40,10 +44,18 @@ exports.createPages = ({ graphql, actions }) => {
       })
       createPage({
         path: `/${widgetId}/thumbsDown`,
-        component: path.resolve('src/pages/vote.js'),
+        component: votePath,
         context: {
           widgetId,
           voteType: 'thumbsDown'
+        },
+      })
+      createPage({
+        path: widgetId,
+        component: widgetPath,
+        context: {
+          widgetId,
+          name
         },
       })
     })

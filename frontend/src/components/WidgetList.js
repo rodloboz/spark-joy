@@ -1,5 +1,5 @@
 import React from 'react'
-import { useStaticQuery, graphql } from "gatsby"
+import { useStaticQuery, graphql, Link } from "gatsby"
 
 const WidgetList = () => {
   const { widgetsApi } = useStaticQuery(
@@ -18,7 +18,9 @@ const WidgetList = () => {
   return (
     <ul>
       { widgetsApi.allWidgets.map(widget => (
-        <li key={widget.widgetId}>{widget.name}</li>
+        <li key={widget.widgetId}>
+          <Link to={widget.widgetId}>{widget.name}</Link>
+        </li>
       ))}
     </ul>
   )
