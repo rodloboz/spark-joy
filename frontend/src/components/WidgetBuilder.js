@@ -4,23 +4,13 @@ import styled from 'styled-components'
 import { Button } from 'rebass'
 import { palette } from 'styled-tools'
 import ButterToast, { Cinnamon } from "butter-toast"
-import gql from 'graphql-tag'
 import { useApolloClient } from 'react-apollo-hooks'
 
 import { Heading, Flex } from './styles'
 
 import { copyToClipboard, getCSS } from '../utils'
+import { SAVE_WIDGET_QUERY } from '../queries'
 
-const SAVE_WIDGET_QUERY = gql`
-  mutation saveWidget($name: String!, $widgetId: String) {
-    saveWidget(name: $name, widgetId: $widgetId) {
-      widgetId
-      name
-      thumbsDown
-      thumbsUp
-    }
-  }
-`
 
 const Input = styled.input`
   border: 0;

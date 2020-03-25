@@ -67,7 +67,7 @@ const resolvers = {
         widgetId = uuidv4();
       }
 
-      await updateItem({
+      const { Attributes } = await updateItem({
           Key: { widgetId },
           UpdateExpression:
             "SET widgetName = :name, thumbsUp = :thumbsUp, thumbsDown = :thumbsDown",
@@ -75,15 +75,20 @@ const resolvers = {
             ":name": name,
             ":thumbsUp": 0,
             ":thumbsDown": 0,
-          }
+          },
+          ReturnValues: 'ALL_NEW'
       });
 
-      return {
-        widgetId,
-        name,
-        thumbsUp: 0,
-        thumbsDown: 0
-      };
+      if (Attributes) {
+        return (
+          {
+            ...Attributes,
+            name: Attributes.widgetName
+          }
+        );
+      }
+
+      return {};
     },
     widgetVote: async (
       _: any,
@@ -93,25 +98,24 @@ const resolvers = {
         thumbsDown = false
       }: { widgetId: string, thumbsUp?: boolean, thumbsDown?: boolean }
     ) => {
-      await updateItem({
+      const { Attributes } = await updateItem({
         Key: { widgetId },
         UpdateExpression:
           "SET thumbsUp = thumbsUp + :thumbsUp, thumbsDown = thumbsDown + :thumbsDown",
         ExpressionAttributeValues: {
           ":thumbsUp": thumbsUp ? 1 : 0,
           ":thumbsDown": thumbsDown ? 1 : 0
-        }
+        },
+        ReturnValues: 'ALL_NEW'
       });
 
-      const { Item } = await getItem({ Key: { widgetId } });
-
-      if (Item) {
-        return(
+      if (Attributes) {
+        return (
           {
-            ...Item,
-            name: Item.widgetName
+            ...Attributes,
+            name: Attributes.widgetName
           }
-        )
+        );
       }
 
       return {};
