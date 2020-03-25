@@ -17,6 +17,11 @@ const typeDefs = gql`
 
   type Mutation {
     saveWidget(name: String!, widgetId: String): Widget
+    widgetVote(
+      widgetId: String!
+      thumbsDown: Boolean
+      thumbsUp: Boolean
+    ): Widget
   }
 `;
 
@@ -56,7 +61,7 @@ const resolvers = {
   Mutation: {
     saveWidget: async (
       _: any,
-      { name, widgetId  }: { name: string, widgetId?: string}
+      { name, widgetId  }: { name: string, widgetId?: string }
     ) => {
       if (!widgetId) {
         widgetId = uuidv4();
@@ -79,6 +84,37 @@ const resolvers = {
         thumbsUp: 0,
         thumbsDown: 0
       };
+    },
+    widgetVote: async (
+      _: any,
+      {
+        widgetId,
+        thumbsUp = false,
+        thumbsDown = false
+      }: { widgetId: string, thumbsUp?: boolean, thumbsDown?: boolean }
+    ) => {
+      await updateItem({
+        Key: { widgetId },
+        UpdateExpression:
+          "SET thumbsUp = thumbsUp + :thumbsUp, thumbsDown = thumbsDown + :thumbsDown",
+        ExpressionAttributeValues: {
+          ":thumbsUp": thumbsUp ? 1 : 0,
+          ":thumbsDown": thumbsDown ? 1 : 0
+        }
+      });
+
+      const { Item } = await getItem({ Key: { widgetId } });
+
+      if (Item) {
+        return(
+          {
+            ...Item,
+            name: Item.widgetName
+          }
+        )
+      }
+
+      return {};
     }
   }
 };
