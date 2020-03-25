@@ -57,7 +57,8 @@ const Question = styled(Heading)`
   text-align: center;
 `
 
-const Widget = React.forwardRef(({ editable, value, update }, ref) => (
+const Widget = React.forwardRef(
+  ({ widgetId, editable, value, update }, ref) => (
   <WidgetLayout ref={ref}>
     <Question h2>
       Did this{" "}
@@ -73,10 +74,10 @@ const Widget = React.forwardRef(({ editable, value, update }, ref) => (
         spark joy?
       </Question>
       <Flex row>
-        <RoundButton>
+        <RoundButton href={`/${widgetId}/thumbsDown`}>
           <span role="img" aria-label="thumbs down">👎</span>
         </RoundButton>
-        <RoundButton>
+        <RoundButton href={`/${widgetId}/thumbsUp`}>
           <span role="img" aria-label="thumbs up">👍</span>
         </RoundButton>
       </Flex>
@@ -88,10 +89,24 @@ const WidgetBuilder = () => {
   const apolloClient = useApolloClient()
 
   async function exportWidget () {
-    const widgetRef = React.createRef()
-    const widget = <Widget value={typeOfJoy} ref={widgetRef} />
-    const el = document.createElement("div")
+    const { data } = await apolloClient.mutate({
+      mutation: SAVE_WIDGET_QUERY,
+      variables: {
+        name: "typeOfJoy"
+      }
+    })
 
+    const widgetRef = React.createRef()
+
+    const widget = (
+      <Widget 
+        value={typeOfJoy}
+        widgetId={data.saveWidget.widgetId}
+        ref={widgetRef} 
+      />
+    )
+
+    const el = document.createElement("div")
     ReactDOM.render(widget, el)
 
     const styles = getCSS(widgetRef.current)
@@ -99,14 +114,7 @@ const WidgetBuilder = () => {
 
     copyToClipboard(html)
 
-    const result = await apolloClient.mutate({
-      mutation: SAVE_WIDGET_QUERY,
-      variables: {
-        name: "typeOfJoy"
-      }
-    })
-
-    console.log(result)
+    console.log(data)
 
     ButterToast.raise({
       content: (
@@ -126,7 +134,11 @@ const WidgetBuilder = () => {
 
   return (
     <Layout>
-      <Widget editable value={typeOfJoy} update={setTypeOfJoy} />
+      <Widget 
+        editable
+        value={typeOfJoy}
+        update={setTypeOfJoy}
+      />
       <Button bg="primary" onClick={exportWidget}>Export</Button>
     </Layout>
   )
