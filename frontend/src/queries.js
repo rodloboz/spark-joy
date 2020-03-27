@@ -1,12 +1,17 @@
 import gql from 'graphql-tag'
 
 export const SAVE_WIDGET_QUERY = gql`
-  mutation saveWidget($name: String!, $widgetId: String) {
-    saveWidget(name: $name, widgetId: $widgetId) {
+  mutation saveWidget(
+    $name: String!
+    $widgetId: String
+    $followUpQuestions: String
+  ) {
+    saveWidget(
+      name: $name
+      widgetId: $widgetId
+      followUpQuestions: $followUpQuestions
+    ) {
       widgetId
-      name
-      thumbsDown
-      thumbsUp
     }
   }
 `

@@ -13,10 +13,15 @@ const typeDefs = gql`
     name: String!
     thumbsUp: Int
     thumbsDown: Int
+    followUpQuestions: String
   }
 
   type Mutation {
-    saveWidget(name: String!, widgetId: String): Widget
+    saveWidget(
+      name: String!
+      widgetId: String
+      followUpQuestions: String
+    ): Widget
     widgetVote(
       widgetId: String!
       thumbsDown: Boolean
@@ -61,7 +66,11 @@ const resolvers = {
   Mutation: {
     saveWidget: async (
       _: any,
-      { name, widgetId  }: { name: string, widgetId?: string }
+      { 
+        name,
+        widgetId,
+        followUpQuestions
+      }: { name: string, widgetId?: string, followUpQuestions?: string }
     ) => {
       if (!widgetId) {
         widgetId = uuidv4();
@@ -70,11 +79,12 @@ const resolvers = {
       const { Attributes } = await updateItem({
           Key: { widgetId },
           UpdateExpression:
-            "SET widgetName = :name, thumbsUp = :thumbsUp, thumbsDown = :thumbsDown",
+            "SET widgetName = :name, thumbsUp = :thumbsUp, thumbsDown = :thumbsDown, followUpQuestions = :followUpQuestions",
           ExpressionAttributeValues: {
             ":name": name,
             ":thumbsUp": 0,
             ":thumbsDown": 0,
+            ":followUpQuestions": followUpQuestions
           },
           ReturnValues: 'ALL_NEW'
       });
