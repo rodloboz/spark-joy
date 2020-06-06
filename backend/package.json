@@ -22,7 +22,7 @@
     "@types/graphql": "^14.2.0",
     "@types/node": "^12.0.4",
     "@types/uuid": "^7.0.2",
-    "apollo-server": "^2.11.0",
+    "apollo-server": "^2.14.2",
     "apollo-server-lambda": "^2.6.1",
     "aws-sdk": "^2.644.0",
     "graphql": "^14.3.1",
